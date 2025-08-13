@@ -1,2 +1,2 @@
-#  My Calculator-app...@ God 
+#  My Calculator-app...@ Good
 successfully deployed..
