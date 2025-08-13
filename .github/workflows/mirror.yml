@@ -9,7 +9,8 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Main Repo
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -18,11 +19,13 @@ jobs:
           git config --global user.name "${{ secrets.GIT_NAME }}"
           git config --global user.email "${{ secrets.GIT_EMAIL }}"
 
-      - name: Test Git Connection
+      - name: Test Connection to Sub Repo
         run: |
+          echo "🔍 Testing connection..."
           git remote add sub-repo https://x-access-token:${{ secrets.SUB_REPO_PAT }}@github.com/Sharmila127/Sub-Repo.git
           git ls-remote sub-repo || echo "❌ Remote connection failed"
 
-      - name: Push to sub repo
+      - name: Push to Sub Repo
         run: |
+          echo "🚀 Pushing to Sub Repo..."
           git push --force sub-repo main || echo "❌ Push failed"
