@@ -9,7 +9,8 @@ jobs:
   mirror:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write   # ✅ Required for pushing
+
     steps:
       - name: Checkout full history from main-repo
         uses: actions/checkout@v4
