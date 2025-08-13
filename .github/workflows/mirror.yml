@@ -8,16 +8,45 @@ on:
 jobs:
   mirror:
     runs-on: ubuntu-latest
+
     steps:
+      # Step 1: Checkout Main-Repo
       - name: Checkout Main-Repo
         uses: actions/checkout@v3
 
+      # Step 2: Configure Git
+      - name: Configure Git
+        run: |
+          git config --global user.name "Sharmila127"
+          git config --global user.email "sharmila6201@gmail.com"
+
+      # Step 3: Push to Sub-Repo (create main if missing)
       - name: Push to Sub-Repo
         run: |
-          git config --global user.name "Your Name"
-          git config --global user.email "you@example.com"
           git remote add sub-repo https://Sharmila127:${{ secrets.PAT_TOKEN }}@github.com/Sharmila127/Sub-Repo.git
+          git fetch sub-repo
+          git branch -M main
           git push sub-repo main --force
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
