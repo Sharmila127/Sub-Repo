@@ -3,7 +3,7 @@ name: Mirror to Sub Repo
 on:
   push:
     branches:
-      - main   # Main-Repo branch name
+      - main
 
 jobs:
   sync:
@@ -12,16 +12,14 @@ jobs:
       - name: Checkout Main Repo
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0   # Full commit history
+          fetch-depth: 0
 
       - name: Configure Git
         run: |
           git config --global user.name "${{ secrets.GIT_NAME }}"
           git config --global user.email "${{ secrets.GIT_EMAIL }}"
 
-      - name: Push to Sub Repo
+      - name: Force Push to Sub Repo
         run: |
-          echo "🔗 Adding Sub Repo remote..."
           git remote add sub-repo https://x-access-token:${{ secrets.SUB_REPO_PAT }}@github.com/Sharmila127/Sub-Repo.git
-          echo "🚀 Force pushing to Sub Repo..."
           git push --force sub-repo main
