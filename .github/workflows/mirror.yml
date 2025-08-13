@@ -1,0 +1,20 @@
+name: Mirror Main Repo to Sub-Repo
+
+on:
+  push:
+    branches:
+      - main  # trigger when main branch changes
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Main-Repo
+        uses: actions/checkout@v3
+
+      - name: Push to Sub-Repo
+        run: |
+          git config --global user.name "Sharmila127"
+          git config --global user.email "sharmila6201@gmail.com"
+          git remote add sub-repo https://Sharmila127:${{ secrets.PAT_TOKEN }}@github.com/Sharmila127/Sub-Repo.git
+          git push sub-repo main --force
