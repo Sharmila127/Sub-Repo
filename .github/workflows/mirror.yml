@@ -1,25 +1,28 @@
-name: Mirror to Sub Repo
+name: Mirror to Sub Repo (Debug)
 
 on:
   push:
     branches:
-      - main   # main branch-ல் commit வந்தால் trigger
+      - main
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
-          fetch-depth: 0   # முழு history checkout செய்ய
+          fetch-depth: 0
 
       - name: Configure Git
         run: |
           git config --global user.name "${{ secrets.GIT_NAME }}"
           git config --global user.email "${{ secrets.GIT_EMAIL }}"
 
-      - name: Push to sub repo
+      - name: Test Git Connection
         run: |
           git remote add sub-repo https://x-access-token:${{ secrets.SUB_REPO_PAT }}@github.com/Sharmila127/Sub-Repo.git
-          git push --force sub-repo main
+          git ls-remote sub-repo || echo "❌ Remote connection failed"
+
+      - name: Push to sub repo
+        run: |
+          git push --force sub-repo main || echo "❌ Push failed"
