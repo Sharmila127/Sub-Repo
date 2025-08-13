@@ -1,0 +1,30 @@
+name: Mirror to sub.repo
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout full history from main-repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git user
+        run: |
+          git config --global user.name "${{ secrets.GIT_NAME }}"
+          git config --global user.email "${{ secrets.GIT_EMAIL }}"
+
+      - name: Push mirror to sub.repo
+        env:
+          SUB_REPO_URL: https://x-access-token:${{ secrets.SUB_REPO_PAT }}@github.com/Sharmila127/Sub-Repo.git
+        run: |
+          git remote remove mirror 2>/dev/null || true
+          git remote add mirror "$SUB_REPO_URL"
+          git push --mirror mirror
