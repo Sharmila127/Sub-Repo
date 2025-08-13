@@ -3,7 +3,7 @@ name: Mirror to Sub Repo
 on:
   push:
     branches:
-      - main   # change if your branch name is different
+      - main  # change if branch is different
 
 jobs:
   mirror:
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout main repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # fetch full history for pushing
+          fetch-depth: 0  # full history
 
       - name: Set Git config
         run: |
@@ -21,8 +21,11 @@ jobs:
 
       - name: Add sub-repo remote
         run: |
-          git remote add sub-repo https://x-access-token:${{ secrets.SUB_REPO_TOKEN }}@github.com/<Sharmila/sub-repo.git
+          echo "Adding sub-repo remote..."
+          git remote add sub-repo https://x-access-token:${{ secrets.SUB_REPO_TOKEN }}@github.com/Sharmila127/Sub-Repo.git
+          git remote -v
 
       - name: Push to sub repo
         run: |
-          git push sub-repo main --force
+          echo "Pushing to sub-repo..."
+          git push sub-repo main --force || (echo "Push failed" && exit 1)
