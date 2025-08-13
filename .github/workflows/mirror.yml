@@ -1,5 +1,29 @@
-mkdir -p .github/workflows
-nano .github/workflows/mirror.yml  # paste file
-git add .github/workflows/mirror.yml
-git commit -m "Add mirror workflow to Sub-Repo"
-git push origin main
+name: Mirror to Sub Repo
+
+on:
+  push:
+    branches:
+      - main  # change if your branch name is different
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # needed for full push
+
+      - name: Set Git config
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Add sub-repo remote
+        run: |
+          git remote add sub-repo https://x-access-token:${{ secrets.SUB_REPO_TOKEN }}@github.com/Sharmila127/Sub-Repo.git
+          git remote -v
+
+      - name: Push to sub repo
+        run: |
+          git push sub-repo main --force
