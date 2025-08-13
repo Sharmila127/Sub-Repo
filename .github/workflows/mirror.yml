@@ -3,27 +3,23 @@ name: Mirror to Sub Repo
 on:
   push:
     branches:
-      - main  # change if your branch name is different
+      - main   # main branch-ல் commit வந்தால் trigger
 
 jobs:
-  mirror:
+  sync:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # needed for full push
+          fetch-depth: 0   # முழு history checkout செய்ய
 
-      - name: Set Git config
+      - name: Configure Git
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-
-      - name: Add sub-repo remote
-        run: |
-          git remote add sub-repo https://x-access-token:${{ secrets.SUB_REPO_TOKEN }}@github.com/Sharmila127/Sub-Repo.git
-          git remote -v
+          git config --global user.name "${{ secrets.GIT_NAME }}"
+          git config --global user.email "${{ secrets.GIT_EMAIL }}"
 
       - name: Push to sub repo
         run: |
-          git push sub-repo main --force
+          git remote add sub-repo https://x-access-token:${{ secrets.SUB_REPO_PAT }}@github.com/Sharmila127/Sub-Repo.git
+          git push --force sub-repo main
